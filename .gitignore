@@ -2,4 +2,7 @@ main.aux
 main.log
 main.synctex.gz
 main.f*
-/build
+build/main.a*
+build/main.f*
+build/main.l*
+build/main.s*
