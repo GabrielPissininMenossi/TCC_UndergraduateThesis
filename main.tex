@@ -37,6 +37,7 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
@@ -89,7 +90,7 @@
 \hypertarget{resumo}{%
 \section{Resumo}\label{resumo}}
 
-Sistemas de software acumulam erosão arquitetural ao longo tempo, e decidir por onde começar a corrigi-la costuma depender de inspeção manual e lenta. Este trabalho propõe e avalia uma abordagem automatizada que, a partir do código-fonte de sistemas Java Spring, detecta violações arquiteturais, estima o risco de cada pacote e recomenda quais pacotes refatorar primeiro, equilibrando benefício e esforço. O sistema é convertido em árvores sintáticas com o JavaParser e subsequentemente em grafos semânticos no Neo4j, sobre o qual 29 regras em Cypher detectam violações do padrão MVC e Singleton, e consultas calculam métricas de acoplamento por pacote. Um índice de risco normalizado rotula os pacotes, uma regressão logística estima a probabilidade de alto risco e o algoritmo NSGA-II busca planos de refatoração que minimizam, ao mesmo tempo, o problema restante e o esforço medido em linhas de código. A avaliação usou 978 projetos de código aberto do GitHub, com 65.139 pacotes e 120.951 violações. Os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade das violações, acima do esperado por um modelo nulo proporcional ao tamanho (76,4\%; teste de Wilcoxon, p \textless{} 10⁻⁸⁰). O modelo atingiu PR-AUC de 98,1\% e recall de 97,6\% em 147 projetos de teste, mas a análise mostrou que esse desempenho reflete a reconstrução do índice estrutural: para localizar violações, o risco previsto equivaleu a ordenar os pacotes por tamanho (58,2\% da severidade nos 20\% iniciais, contra 19,9\% ao acaso). Nos projetos em que a frente de Pareto exata pôde ser enumerada, o NSGA-II alcançou 99,9\% do seu hipervolume. A contribuição é um pipeline reprodutível, evidência em larga escala da concentração de violações arquiteturais e uma análise crítica das métricas de classificação quanto a utilidade de um modelo de risco.
+Sistemas de software acumulam erosão arquitetural ao longo tempo, e decidir por onde começar a corrigi-la costuma depender de inspeção manual e lenta. Este trabalho propõe e avalia uma abordagem automatizada que, a partir do código-fonte de sistemas Java Spring, detecta violações arquiteturais, estima o risco de cada pacote e recomenda quais pacotes refatorar primeiro, equilibrando benefício e esforço. O sistema é convertido em árvores sintáticas com o JavaParser e subsequentemente em grafos semânticos no Neo4j, sobre o qual 29 regras em Cypher detectam violações do padrão MVC e Singleton, e consultas calculam métricas de acoplamento por pacote. Um índice de risco normalizado rotula os pacotes, uma regressão logística estima a probabilidade de alto risco e o algoritmo NSGA-II busca planos de refatoração que minimizam, ao mesmo tempo, o problema restante e o esforço medido em linhas de código. A avaliação usou 978 projetos de código aberto do GitHub, com 65.139 pacotes e 120.951 violações. Os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade das violações, acima do esperado por um modelo nulo proporcional ao tamanho (76,4\%; teste de Wilcoxon, p \textless{} $10^{-80}$). O modelo atingiu PR-AUC de 98,1\% e recall de 97,6\% em 147 projetos de teste, mas a análise mostrou que esse desempenho reflete a reconstrução do índice estrutural: para localizar violações, o risco previsto equivaleu a ordenar os pacotes por tamanho (58,2\% da severidade nos 20\% iniciais, contra 19,9\% ao acaso). Nos projetos em que a frente de Pareto exata pôde ser enumerada, o NSGA-II alcançou 99,9\% do seu hipervolume. A contribuição é um pipeline reprodutível, evidência em larga escala da concentração de violações arquiteturais e uma análise crítica das métricas de classificação quanto a utilidade de um modelo de risco.
 
 \textbf{Palavras-chave:} erosão arquitetural; engenharia de software baseada em busca; NSGA-II; princípio de Pareto; análise estática; refatoração.
 
@@ -178,7 +179,7 @@ A severidade ponderada de um pacote é 3*HIGH + 2*MEDIUM + 1*LOW + 0,5*INFO. O �
 
 risco = 0,2 * {[}N(severidade) + N(violações Singleton) + N(classes em ciclo) + N(dependências cruzadas) + N(fan-out){]} (1)
 
-em que N(x) = (x − mín) / (máx − mín). Os pacotes do terço superior do índice (risco ≥ 0,00462) recebem o rótulo ALTO RISCO, usado como classe positiva no treino.
+em que N(x) = (x − mín) / (máx − mín). Os pacotes do terço superior do índice (risco $\geq$ 0,00462) recebem o rótulo ALTO RISCO, usado como classe positiva no treino.
 
 \hypertarget{modelo-de-risco}{%
 \subsection{Modelo de risco}\label{modelo-de-risco}}
@@ -224,7 +225,7 @@ A Figura 2 mostra a distribuição das 120.951 violações. Práticas do Spring 
 \hypertarget{concentrauxe7uxe3o-das-violauxe7uxf5es}{%
 \subsection{Concentração das violações}\label{concentrauxe7uxe3o-das-violauxe7uxf5es}}
 
-Em 891 projetos, os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade (IC 95\% da mediana: 90,5\% a 92,9\%; quartis: 78,3\% e 98,6\%), e 73,8\% dos projetos passaram de 80\% (Figura 3). O tamanho explica parte disso: esses pacotes contêm 44,8\% das linhas de código, e o modelo nulo proporcional ao tamanho produziria uma concentração mediana de 76,4\%. Ainda assim, a concentração real superou a nula em 76,7\% dos projetos, com diferença mediana de 10,3 pontos percentuais (Wilcoxon, p \textless{} 10⁻⁸⁰). A conclusão se mantém, e se fortalece, nas análises de sensibilidade (Tabela 2).
+Em 891 projetos, os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade (IC 95\% da mediana: 90,5\% a 92,9\%; quartis: 78,3\% e 98,6\%), e 73,8\% dos projetos passaram de 80\% (Figura 3). O tamanho explica parte disso: esses pacotes contêm 44,8\% das linhas de código, e o modelo nulo proporcional ao tamanho produziria uma concentração mediana de 76,4\%. Ainda assim, a concentração real superou a nula em 76,7\% dos projetos, com diferença mediana de 10,3 pontos percentuais (Wilcoxon, p \textless{} $10^{-80}$). A conclusão se mantém, e se fortalece, nas análises de sensibilidade (Tabela 2).
 
 \begin{figure}[htbp]
 \centering
@@ -248,7 +249,7 @@ Em 891 projetos, os 20\% de pacotes mais graves concentraram, na mediana, 91,7\%
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{S20 mediano}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{Projetos com S20 ≥ 80\%}
+\textbf{Projetos com S20 $\geq$ 80\%}
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
@@ -266,7 +267,7 @@ O resultado replica para violações arquiteturais a concentração observada pa
 \hypertarget{desempenho-e-utilidade-do-modelo}{%
 \subsection{Desempenho e utilidade do modelo}\label{desempenho-e-utilidade-do-modelo}}
 
-No teste (147 projetos, 8.373 pacotes), o modelo obteve acurácia de 90,2\% (IC 95\%: 89,2\% a 91,0\%), precisão de 80,1\% (74,9\% a 83,4\%), recall de 97,6\% (96,2\% a 98,4\%), F1 de 88,0\% (84,3\% a 90,3\%) e PR-AUC de 98,1\% (96,7\% a 98,8\%) (Figura 4). Os valores de treino foram próximos (acurácia de 91,1\% e PR-AUC de 97,6\%), sem sinal de sobreajuste. Excluindo os 17 projetos de teste com estrutura de pacotes quase idêntica à de um projeto de treino (Jaccard ≥ 0,8), os resultados praticamente não mudaram (acurácia de 90,0\% e PR-AUC de 98,2\%).
+No teste (147 projetos, 8.373 pacotes), o modelo obteve acurácia de 90,2\% (IC 95\%: 89,2\% a 91,0\%), precisão de 80,1\% (74,9\% a 83,4\%), recall de 97,6\% (96,2\% a 98,4\%), F1 de 88,0\% (84,3\% a 90,3\%) e PR-AUC de 98,1\% (96,7\% a 98,8\%) (Figura 4). Os valores de treino foram próximos (acurácia de 91,1\% e PR-AUC de 97,6\%), sem sinal de sobreajuste. Excluindo os 17 projetos de teste com estrutura de pacotes quase idêntica à de um projeto de treino (Jaccard $\geq$ 0,8), os resultados praticamente não mudaram (acurácia de 90,0\% e PR-AUC de 98,2\%).
 
 \begin{figure}[htbp]
 \centering
@@ -278,7 +279,7 @@ No teste (147 projetos, 8.373 pacotes), o modelo obteve acurácia de 90,2\% (IC 
 
 Esses números, no entanto, devem ser lidos com cautela. A regra de uma linha "três ou mais dependências cruzadas ou alguma classe em ciclo" acerta 95,4\% dos rótulos do teste, e a parte estrutural do índice acerta 96,8\%. Com os limites do corpus, três dependências cruzadas sozinhas já ultrapassam o corte de ALTO RISCO, e essa parcela responde por cerca de 78\% do índice médio dos pacotes de alto risco. Os pesos do modelo confirmam a leitura: dependências cruzadas (2,86) e fan-out (0,95) dominam, seguidos pelo grau médio (0,54) e pelas classes em ciclo (0,46). O modelo, portanto, reconstrói um índice que é, em boa parte, função das próprias entradas.
 
-Por isso a avaliação decisiva é se o risco previsto, que não recebe as violações, as localiza (Figura 5). Nos 136 projetos de teste com violações, os 20\% de pacotes de maior risco capturaram, na mediana, 58,2\% da severidade (IC 95\%: 51,6\% a 64,8\%), bem acima do acaso (19,9\%; Wilcoxon, p \textless{} 10⁻²⁰) e abaixo do ótimo (88,6\%). Os pacotes marcados como alto risco tinham violação em 50,3\% dos casos, contra 18,5\% dos demais. Porém, ordenar os pacotes apenas pelo número de linhas de código produziu a mesma captura mediana (58,2\%; diferença não significativa, p = 0,54), Popt semelhante (0,855 contra 0,865) e PR-AUC ligeiramente maior para a presença de violação (0,58 contra 0,56). Para localizar violações, o risco previsto equivale, na prática, a olhar primeiro os pacotes maiores.
+Por isso a avaliação decisiva é se o risco previsto, que não recebe as violações, as localiza (Figura 5). Nos 136 projetos de teste com violações, os 20\% de pacotes de maior risco capturaram, na mediana, 58,2\% da severidade (IC 95\%: 51,6\% a 64,8\%), bem acima do acaso (19,9\%; Wilcoxon, p \textless{} $10^{-20}$) e abaixo do ótimo (88,6\%). Os pacotes marcados como alto risco tinham violação em 50,3\% dos casos, contra 18,5\% dos demais. Porém, ordenar os pacotes apenas pelo número de linhas de código produziu a mesma captura mediana (58,2\%; diferença não significativa, p = 0,54), Popt semelhante (0,855 contra 0,865) e PR-AUC ligeiramente maior para a presença de violação (0,58 contra 0,56). Para localizar violações, o risco previsto equivale, na prática, a olhar primeiro os pacotes maiores.
 
 \begin{figure}[htbp]
 \centering
