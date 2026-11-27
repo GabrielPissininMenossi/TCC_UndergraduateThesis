@@ -1,0 +1,15 @@
+% Fluxo do trabalho (pesquisa): da coleta dos repositórios ao treinamento do modelo.
+% Cores: serviço responsável por cada etapa (verde = Go, azul = Java + Neo4j, laranja = Python).
+\begin{tikzpicture}[node distance=0.3cm]
+  \node[etapa=cverde, text width=2.15cm] (c1) {\textbf{Coleta}\\[2pt]1.483 repositórios do GitHub; 984 Spring};
+  \node[etapa=cazul, text width=2.15cm, right=of c1] (c2) {\textbf{Análise do código}\\[2pt]JavaParser e Symbol Solver};
+  \node[etapa=cazul, text width=2.15cm, right=of c2] (c3) {\textbf{Grafo semântico}\\[2pt]nós e arestas no Neo4j};
+  \node[etapa=cazul, text width=2.15cm, right=of c3] (c4) {\textbf{Regras e métricas}\\[2pt]29 regras Cypher e métricas por pacote};
+  \node[etapa=claranja, text width=2.15cm, right=of c4] (c5) {\textbf{Índice de risco}\\[2pt]rótulo ALTO RISCO (terço superior)};
+  \node[etapa=claranja, text width=2.15cm, right=of c5] (c6) {\textbf{Treinamento}\\[2pt]regressão logística (685 projetos)};
+  \foreach \a/\b in {c1/c2, c2/c3, c3/c4, c4/c5, c5/c6} \draw[seta] (\a) -- (\b);
+  \node[below=0.35cm of c3.south east, anchor=north, font=\scriptsize] {%
+    \tikz\fill[cverde] (0,0) rectangle (0.22,0.22); Go\quad
+    \tikz\fill[cazul] (0,0) rectangle (0.22,0.22); Java + Neo4j\quad
+    \tikz\fill[claranja] (0,0) rectangle (0.22,0.22); Python};
+\end{tikzpicture}

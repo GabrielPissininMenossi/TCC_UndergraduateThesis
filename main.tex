@@ -38,9 +38,27 @@
 \makeatother
 \usepackage{xcolor}
 \usepackage{graphicx}
+% Figuras em LaTeX nativo (TikZ e pgfplots); os arquivos ficam em figures/*.tex
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, every axis/.append style={font=\footnotesize}}
+\pgfkeys{/pgf/number format/.cd, use comma, 1000 sep={.}}
+\definecolor{cazul}{HTML}{2A78D6}
+\definecolor{claranja}{HTML}{EB6834}
+\definecolor{cverde}{HTML}{1BAF7A}
+\definecolor{camarelo}{HTML}{EDA100}
+\definecolor{ccinza}{HTML}{9B9A96}
+\tikzset{
+  etapa/.style={draw=#1, line width=0.9pt, rounded corners=3pt, fill=#1!7, text width=1.9cm,
+                minimum height=1.6cm, align=center, inner sep=3pt, font=\scriptsize,
+                execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+  seta/.style={-{Stealth[length=4pt]}, line width=0.7pt, black!65},
+}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
+\usepackage{needspace} % mantém o título da tabela junto da tabela
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
@@ -80,7 +98,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 \renewcommand{\hl}[1]{\textcolor{red}{#1}}
-\title{Priorização da manutenção arquitetural em sistemas Java Spring: análise estática, grafos semânticos e otimização multiobjetivo}
+\title{Aplicação de Inteligência Artificial (\emph{Machine Learning} e Algoritmos Genéticos) para Recomendações de Manutenção em Padrões de Projeto MVC e Singleton em Sistemas Java Spring}
 \author{Gabriel Pissinin Menossi\\Unoeste -- Universidade do Oeste Paulista\\FIPP -- Faculdade de Informática de Presidente Prudente\\DOI: ainda não possui}
 \date{}
 
@@ -90,9 +108,9 @@
 \hypertarget{resumo}{%
 \section{Resumo}\label{resumo}}
 
-Sistemas de software acumulam erosão arquitetural ao longo tempo, e decidir por onde começar a corrigi-la costuma depender de inspeção manual e lenta. Este trabalho propõe e avalia uma abordagem automatizada que, a partir do código-fonte de sistemas Java Spring, detecta violações arquiteturais, estima o risco de cada pacote e recomenda quais pacotes refatorar primeiro, equilibrando benefício e esforço. O sistema é convertido em árvores sintáticas com o JavaParser e subsequentemente em grafos semânticos no Neo4j, sobre o qual 29 regras em Cypher detectam violações do padrão MVC e Singleton, e consultas calculam métricas de acoplamento por pacote. Um índice de risco normalizado rotula os pacotes, uma regressão logística estima a probabilidade de alto risco e o algoritmo NSGA-II busca planos de refatoração que minimizam, ao mesmo tempo, o problema restante e o esforço medido em linhas de código. A avaliação usou 978 projetos de código aberto do GitHub, com 65.139 pacotes e 120.951 violações. Os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade das violações, acima do esperado por um modelo nulo proporcional ao tamanho (76,4\%; teste de Wilcoxon, p \textless{} $10^{-80}$). O modelo atingiu PR-AUC de 98,1\% e recall de 97,6\% em 147 projetos de teste, mas a análise mostrou que esse desempenho reflete a reconstrução do índice estrutural: para localizar violações, o risco previsto equivaleu a ordenar os pacotes por tamanho (58,2\% da severidade nos 20\% iniciais, contra 19,9\% ao acaso). Nos projetos em que a frente de Pareto exata pôde ser enumerada, o NSGA-II alcançou 99,9\% do seu hipervolume. A contribuição é um pipeline reprodutível, evidência em larga escala da concentração de violações arquiteturais e uma análise crítica das métricas de classificação quanto a utilidade de um modelo de risco.
+Sistemas de software acumulam erosão arquitetural ao longo do tempo, e decidir por onde corrigi-la costuma depender de inspeção manual e lenta. Este trabalho propõe e avalia uma abordagem automatizada que, a partir do código-fonte de sistemas Java Spring, detecta violações arquiteturais, estima o risco de cada pacote e recomenda quais refatorar, equilibrando benefício e esforço. Sistemas são convertidos em árvores sintáticas com JavaParser e subsequentemente em grafos semânticos no Neo4j, dos quais, consultas Cypher, detectam violações do padrão MVC (18 regras), Singleton (11 regras) e métricas de acoplamento por pacote. Um índice de risco normalizado rotula os pacotes, um modelo de regressão logística estima a probabilidade de alto risco e o algoritmo NSGA-II busca planos de refatoração, que minimizem o problema arquitetural e o esforço medido em linhas de código. A avaliação usou 978 projetos de código aberto do GitHub, com 65.139 pacotes e 120.951 violações. Os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade das violações, acima dos 76,4\% esperados se as violações fossem distribuídas ao acaso, proporcionalmente ao tamanho dos pacotes (teste de Wilcoxon, $p < 10^{-80}$). O modelo de regressão logística atingiu PR-AUC de 98,1\% e recall de 97,6\% em 147 projetos de teste, mas a análise mostrou que esse desempenho reflete a reconstrução do índice estrutural, onde os resultados mostraram que para localizar violações, o risco previsto foi equivalente a ordenar os pacotes por tamanho (58,2\% da severidade dos 20\% iniciais, igual à ordenação por tamanho). Nos projetos em que a frente de Pareto exata pôde ser enumerada, o NSGA-II alcançou 99,9\% do seu hipervolume. A contribuição do projeto é um pipeline reprodutível, evidência em larga escala da concentração de violações arquiteturais e uma análise crítica das métricas de classificação quanto à utilidade de um modelo de risco.
 
-\textbf{Palavras-chave:} erosão arquitetural; engenharia de software baseada em busca; NSGA-II; princípio de Pareto; análise estática; refatoração.
+\textbf{Palavras-chave:} Search-Based Software Engineering; Cypher; NSGA-2; Arquitetura; Princípio de Pareto; Grafos Semânticos.
 
 \hypertarget{introduuxe7uxe3o}{%
 \section{Introdução}\label{introduuxe7uxe3o}}
@@ -112,23 +130,18 @@ As contribuições são: (i) um pipeline aberto e reprodutível, do código-font
 \hypertarget{material-e-muxe9todos}{%
 \section{Material e métodos}\label{material-e-muxe9todos}}
 
-\hypertarget{desenho-da-soluuxe7uxe3o}{%
-\subsection{Desenho da solução}\label{desenho-da-soluuxe7uxe3o}}
-
-A solução é composta por três serviços (Figura 1). Um serviço em Java (Java 25, Spring Boot 4.1.1) analisa o código e constrói o grafo no Neo4j 5.26; um serviço em Python 3.12 calcula o risco e executa o NSGA-II; e uma aplicação web em Go 1.26 orquestra as etapas e apresenta os resultados.
+O trabalho foi conduzido em seis etapas, da coleta dos repositórios ao treinamento do modelo de risco, resumidas na Figura~\ref{fig:fluxo-trabalho} e detalhadas a seguir.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image5.png}
-\caption{Fluxo da abordagem, da coleta dos projetos à recomendação.}
+\input{figures/fig_fluxo_trabalho.tex}
+\caption{Fluxo do trabalho, da coleta dos repositórios ao treinamento do modelo de risco. As cores indicam o serviço responsável por cada etapa.}
+\label{fig:fluxo-trabalho}
 \end{figure}
 
+Como corpus, os projetos foram coletados pela API REST de busca do GitHub com os critérios: linguagem Java, ao menos 20 estrelas, tamanho mínimo de 500 KB e último \emph{push} nos 24 meses anteriores à coleta, para privilegiar projetos com manutenção ativa. E para critério de seleção, dos 1.483 candidatos, 984 foram confirmados como Spring pela presença do framework nos arquivos de build (Maven ou Gradle). Os repositórios foram clonados com profundidade 1 e analisados um a um; 979 geraram grafo e 978 tiveram métricas por pacote.
 
-\hypertarget{corpus-e-crituxe9rios-de-seleuxe7uxe3o}{%
-\subsection{Corpus e critérios de seleção}\label{corpus-e-crituxe9rios-de-seleuxe7uxe3o}}
-
-Os projetos foram coletados pela API REST de busca do GitHub com os critérios: linguagem Java, ao menos 20 estrelas, tamanho mínimo de 500 KB e último \emph{push} nos 24 meses anteriores à coleta, para privilegiar projetos com manutenção ativa. Dos 1.483 candidatos, 984 foram confirmados como Spring pela presença do framework nos arquivos de build (Maven ou Gradle). Os repositórios foram clonados com profundidade 1 e analisados um a um; 979 geraram grafo e 978 tiveram métricas por pacote. A Tabela 1 resume o corpus.
-
+\needspace{6\baselineskip}
 \textbf{Tabela 1.} Corpus e divisão entre treino, validação e teste.
 
 \begin{longtable}[]{@{}
@@ -160,96 +173,191 @@ Pacotes de alto risco & 32,8\% & 33,5\% & 36,6\% & 33,4\% \\
 
 O corpus soma 4,84 milhões de nós, 11,4 milhões de arestas e 12,9 milhões de linhas de código em métodos. A mediana é de 21 pacotes por projeto (máximo de 2.776); 31,3\% dos pacotes têm ao menos uma violação.
 
-\hypertarget{pruxe9-processamento-do-cuxf3digo-ao-grafo}{%
-\subsection{Pré-processamento: do código ao grafo}\label{pruxe9-processamento-do-cuxf3digo-ao-grafo}}
+O pré-processamento começa pela análise sintática de cada arquivo \texttt{.java} com o JavaParser 3.26.3, biblioteca de código aberto que lê o código-fonte Java, o divide em tokens (palavras-chave, identificadores e símbolos) e organiza esses tokens em uma árvore sintática abstrata (AST). A AST representa a estrutura hierárquica do arquivo: a classe contém campos e métodos, os métodos contêm comandos e os comandos contêm expressões, como chamadas de método.
 
-Cada arquivo .java é convertido em uma árvore sintática abstrata pelo JavaParser 3.26.3, com o Symbol Solver configurado para resolver tipos do próprio projeto, do JDK e das bibliotecas disponíveis. A análise é feita sobre o código-fonte, sem compilar o projeto, o que viabiliza processar centenas de repositórios de terceiros. O grafo tem nós de projeto, pacote, arquivo, tipo, método, campo e construtor, e arestas de contenção, declaração, dependência entre tipos, chamada de método e uso de tipos (campo, parâmetro, retorno, instanciação, herança, implementação e exceção). Ele é gravado no Neo4j em lotes de 2.000 operações, como uma forma de evitar erros devido a uma quantidade de gravação muito grande.
+A AST, porém, descreve apenas a forma do código, e não o significado dos nomes que nele aparecem. Para isso foi usado o Symbol Solver, módulo do JavaParser que resolve cada nome para o tipo a que se refere. É essa resolução que permite registrar dependências reais entre classes. O Symbol Solver foi configurado para consultar, nesta ordem, as classes da biblioteca padrão do Java fornecidas pelo JDK (Java Development Kit, o kit de desenvolvimento da linguagem), o próprio código-fonte do projeto, e as bibliotecas disponíveis no ambiente do analisador. Tipos que não puderam ser resolvidos, como os de dependências externas do projeto, foram registrados como externos e não entraram nas métricas de acoplamento.
 
-\hypertarget{detecuxe7uxe3o-de-violauxe7uxf5es-e-muxe9tricas}{%
-\subsection{Detecção de violações e métricas}\label{detecuxe7uxe3o-de-violauxe7uxf5es-e-muxe9tricas}}
+A análise é feita diretamente sobre o código-fonte, sem compilar o projeto. Essa escolha viabiliza o processamento de centenas de repositórios de terceiros, muitos dos quais não iriam compilar fora do ambiente original de seus autores por depender de bibliotecas privadas ou de versões específicas do Java.
 
-Sobre o grafo são executadas 29 regras em Cypher: 18 de Spring MVC e 11 do padrão Singleton. As regras de Spring MVC cobrem dependências indevidas entre camadas, uso de @Transactional, injeção de dependência, tratamento de exceções e Controllers com responsabilidades excessivas; três delas são heurísticas baseadas no nome dos métodos. Cada ocorrência gera um nó de violação ligado à classe responsável, com severidade HIGH, MEDIUM, LOW ou INFO.
+A partir das árvores resolvidas, constrói-se o grafo semântico do projeto. Seus nós representam projeto, pacote, arquivo, tipo (classe, interface ou enumeração), método, campo e construtor. Suas arestas representam contenção (um pacote contém arquivos e um arquivo contém tipos), declaração (um tipo declara métodos e campos), dependência entre tipos, chamada de método e uso de tipos como campo, parâmetro, retorno, instanciação, herança, implementação e exceção. O grafo é gravado no Neo4j em lotes de 2.000 operações, cada um enviado em uma única transação, o que reduz o número de idas ao banco de dados e limita a memória consumida por transação.
 
-Para cada pacote, consultas em Cypher calculam: o acoplamento aferente (fan-in, classes de outros pacotes que dependem dele); o acoplamento eferente (fan-out, soma das dependências de suas classes para classes de outros pacotes); as dependências cruzadas (número de pacotes distintos dos quais depende); as classes que participam de ciclos de dependência de até cinco classes; a instabilidade I = fan-out / (fan-in + fan-out) (Martin, 2003); e as contagens de violações por severidade. Só entram dependências entre classes do próprio projeto. O grafo é então exportado e removido do Neo4j.
+Com o grafo construído, é o momento de detectar sobre ele as violações e registrar as métricas. Sobre o grafo são executadas 29 regras em Cypher (Tabela 2): 18 de Spring MVC e 11 do padrão Singleton. As regras de Spring MVC cobrem dependências indevidas entre camadas, uso de @Transactional, injeção de dependência, tratamento de exceções e Controllers com responsabilidades excessivas; três delas são heurísticas baseadas no nome dos métodos. Cada ocorrência gera um nó de violação ligado à classe responsável, com severidade HIGH, MEDIUM, LOW ou INFO. Não necessariamente todas as violações identificam falhas, como por exemplo as regras SG\_01, SG\_02, SG\_04 e SG\_05 são INFO, e SG\_08 e SG\_10 indicam apenas que a classe está protegida, informações associadas totalmente com boas práticas, e não com falhas propriamente ditas.
 
-\hypertarget{uxedndice-de-risco-e-ruxf3tulo}{%
-\subsection{Índice de risco e rótulo}\label{uxedndice-de-risco-e-ruxf3tulo}}
+\needspace{6\baselineskip}
+\textbf{Tabela 2.} Consultas Cypher utilizadas no projeto. Nome geral, severidade, descrição detalhada e quantidade de ocorrência no corpus do projeto.
 
-A severidade ponderada de um pacote é 3*HIGH + 2*MEDIUM + 1*LOW + 0,5*INFO. O índice de risco combina cinco parcelas normalizadas entre 0 e 1 pelos valores mínimo e máximo do corpus (Equação 1):
+{\footnotesize
+\begin{longtable}[]{@{}>{\raggedright\arraybackslash}p{1.15cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{7.1cm}>{\raggedleft\arraybackslash}p{1.25cm}@{}}
+\toprule\noalign{}
+\textbf{Regra} & \textbf{Nome} & \textbf{Sev.} & \textbf{O que identifica} & \textbf{Ocorr.} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\textbf{Regra} & \textbf{Nome} & \textbf{Sev.} & \textbf{O que identifica} & \textbf{Ocorr.} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\multicolumn{5}{@{}p{\linewidth}@{}}{\scriptsize * Regras heurísticas, baseadas no nome dos métodos. A numeração não inclui MVC16 porque essa regra depende da modelagem dos parâmetros dos métodos, ainda não representada no grafo.}
+\endlastfoot
+MVC01 & Controller depende de Repository & HIGH & Controller que acessa diretamente um Repository, pulando a camada Service & 165 \\
+MVC02 & Service depende de Controller & HIGH & Service que depende de um Controller (dependência invertida entre camadas) & 8 \\
+MVC03 & Repository depende de Controller ou Service & HIGH & Repository que depende de uma camada superior & 21 \\
+SG01 & Controller Singleton & MEDIUM & Controller implementado como Singleton manual (construtor privado, campo estático da própria classe e método \texttt{getInstance}), em vez de deixar o Spring gerenciar a instância & 0 \\
+MVC04 & Controller sem rotas & LOW & Classe anotada como Controller sem nenhum método mapeado para requisições (@GetMapping, @PostMapping etc.) & 833 \\
+MVC05 & Controller expõe entidade JPA & HIGH & Método de Controller que devolve diretamente uma entidade @Entity, em vez de um DTO & 450 \\
+MVC06 & Service trata HTTP & HIGH & Service que devolve ou recebe tipos da camada web (ResponseEntity, HttpServletRequest, HttpServletResponse, HttpSession) & 4.097 \\
+MVC07 & Repository usa tipos da camada web & MEDIUM & Repository que depende de tipos HTTP ou de classes de pacotes de DTO & 76 \\
+MVC08 & Dependência invertida por chamada transitiva & HIGH & Repository ou Service que, por uma cadeia de até quatro chamadas, acaba invocando uma camada superior & 3 \\
+MVC09 & Ciclo entre Services & MEDIUM & Dois Services que se chamam mutuamente & 11 \\
+MVC10 & Autoinvocação de método @Transactional & HIGH & Método que chama, na própria classe, outro método @Transactional; a transação não é aplicada porque a chamada não passa pelo proxy do Spring & 217 \\
+MVC11 & @Transactional em método privado & HIGH & Método privado anotado com @Transactional, anotação que o Spring ignora nesse caso & 14 \\
+MVC12* & Escrita sem @Transactional & MEDIUM & Método de Service com nome de escrita (save, update, delete, create, salvar, remover etc.) sem @Transactional & 10.615 \\
+MVC13* & Leitura sem @Transactional & LOW & Método de Service com nome de leitura (find, get, list, buscar, listar etc.) sem @Transactional(readOnly = true) & 21.559 \\
+MVC14 & Injeção por campo & LOW & Campo injetado com @Autowired em vez de injeção pelo construtor & 53.187 \\
+MVC15 & Tratamento genérico de exceções & MEDIUM & Método com @ExceptionHandler; aproximação, pois o tipo de exceção tratado não é verificado & 3.001 \\
+MVC17 & Controller com fan-out excessivo & MEDIUM & Método de Controller que chama mais de 15 métodos distintos, sinal de lógica de negócio no Controller & 999 \\
+MVC18* & Repository com nome de regra de negócio & LOW & Método de Repository cujo nome sugere lógica de negócio (cálculo, validação, aprovação, desconto etc.) & 134 \\
+SG\_01 & Candidato a Singleton & INFO & Classe com construtor privado, campo estático do próprio tipo e método \texttt{getInstance} & 150 \\
+SG\_02 & Singleton com inicialização antecipada & INFO & Classe com campo estático e final do próprio tipo, já instanciado na declaração & 2.095 \\
+SG\_03 & Singleton com getter sincronizado & MEDIUM & Método \texttt{getInstance} declarado \texttt{synchronized}, o que pode gerar gargalo de desempenho & 31 \\
+SG\_04 & Singleton com double-checked locking & INFO & Campo \texttt{volatile} do próprio tipo e \texttt{getInstance} com verificação dupla e bloco \texttt{synchronized} & 8 \\
+SG\_05 & Singleton com Holder & INFO & Classe interna ``Holder'' que guarda a instância única da classe externa & 43 \\
+SG\_06 & Singleton por enum & INFO & Todo tipo \texttt{enum} do projeto & 7.046 \\
+SG\_07 & Singleton vulnerável à desserialização & HIGH & Classe serializável com construtor privado e sem \texttt{readResolve()}; a desserialização pode criar uma segunda instância & 210 \\
+SG\_08 & Singleton protegido contra desserialização & LOW & Classe que implementa \texttt{readResolve()} & 56 \\
+SG\_09 & Singleton vulnerável à clonagem & HIGH & Classe \texttt{Cloneable} com construtor privado cujo \texttt{clone()} não impede cópias & 13 \\
+SG\_10 & Singleton protegido contra clonagem & LOW & Classe cujo \texttt{clone()} lança \texttt{CloneNotSupportedException} & 27 \\
+SG\_11 & Singleton sem proteção contra reflexão & MEDIUM & Classe com construtor privado que não verifica se já existe uma instância & 15.882 \\
+\midrule\noalign{}
+ & \textbf{Total} & & & \textbf{120.951} \\
+\end{longtable}
+}
 
-risco = 0,2 * {[}N(severidade) + N(violações Singleton) + N(classes em ciclo) + N(dependências cruzadas) + N(fan-out){]} (1)
+Cada regra recebe uma severidade conforme o impacto da ocorrência sobre o sistema. HIGH indica violações que quebram a separação entre camadas ou fazem o framework se comportar de forma diferente da esperada. MEDIUM indica problemas que degradam a manutenção ou o desempenho sem causar falha imediata. LOW indica desvios de boas práticas recomendadas pelo framework, como a injeção de dependência por campo. INFO apenas registra a presença de um padrão, sem apontar um problema. No índice de risco, essas severidades recebem os pesos 3, 2, 1 e 0,5, respectivamente. As regras foram escolhidas por três motivos: o padrão MVC estrutura praticamente todos os projetos Spring, nas camadas Controller, Service e Repository; o Singleton é um padrão de criação frequentemente implementado de forma manual, o que conflita com o Spring, que já gerencia seus componentes como instâncias únicas; e ambos podem ser verificados no grafo, a partir de anotações, dependências e chamadas entre classes, sem executar nem compilar o projeto.
 
-em que N(x) = (x − mín) / (máx − mín). Os pacotes do terço superior do índice (risco $\geq$ 0,00462) recebem o rótulo ALTO RISCO, usado como classe positiva no treino.
+Em concordância com as regras arquiteturais, também para cada pacote, consultas em Cypher calculam: o acoplamento aferente ($C_a$, ou fan-in, classes de outros pacotes que dependem dele); o acoplamento eferente ($C_e$, ou fan-out, soma das dependências de suas classes para classes de outros pacotes); as dependências cruzadas (número de pacotes distintos dos quais depende); as classes que participam de ciclos de dependência de até cinco classes; a instabilidade (Martin, 2003), dada por
+\begin{equation}
+  I = \frac{C_e}{C_a + C_e};
+  \label{eq:instabilidade}
+\end{equation}
+e as contagens de violações por severidade. Só entram dependências entre classes do próprio projeto. O grafo é então exportado e removido do Neo4j.
 
-\hypertarget{modelo-de-risco}{%
-\subsection{Modelo de risco}\label{modelo-de-risco}}
+A severidade ponderada de um pacote é
+\begin{equation}
+  S = 3\,n_{\mathrm{H}} + 2\,n_{\mathrm{M}} + n_{\mathrm{L}} + 0{,}5\,n_{\mathrm{I}},
+  \label{eq:severidade}
+\end{equation}
+em que $n_{\mathrm{H}}$, $n_{\mathrm{M}}$, $n_{\mathrm{L}}$ e $n_{\mathrm{I}}$ são os números de violações de severidade HIGH, MEDIUM, LOW e INFO do pacote.
 
-A regressão logística estima a probabilidade de alto risco a partir de 11 medidas estruturais: fan-in, fan-out, classes em ciclo, dependências cruzadas e sete medidas do subgrafo do pacote (nós, arestas, tipos, Controllers, Services, Repositories e grau médio). As contagens e a severidade das violações são excluídas das entradas. As entradas são padronizadas com média e desvio do treino, e o treino usa gradiente descendente em lote, 600 épocas, taxa de aprendizado 0,08, regularização L2 0,01 e pesos que equilibram as classes. A função de custo é convexa, por isso não se usou parada antecipada.
+O índice de risco combina cinco parcelas normalizadas entre 0 e 1 pelos valores mínimo e máximo do corpus:
+\begin{equation}
+  r = 0{,}2\,\bigl[\,N(S) + N(V_{\mathrm{SG}}) + N(K) + N(D) + N(C_e)\,\bigr],
+  \label{eq:risco}
+\end{equation}
+em que $S$ é a severidade ponderada (Equação~\ref{eq:severidade}), $V_{\mathrm{SG}}$ o número de violações das regras Singleton, $K$ o número de classes em ciclo, $D$ o número de dependências cruzadas e $C_e$ o fan-out do pacote, e
+\begin{equation}
+  N(x) = \frac{x - x_{\min}}{x_{\max} - x_{\min}},
+  \label{eq:normalizacao}
+\end{equation}
+com $x_{\min}$ e $x_{\max}$ calculados sobre todos os pacotes do corpus. Os pacotes do terço superior do índice ($r \geq 0{,}00462$) recebem o rótulo ALTO RISCO, usado como classe positiva no treino.
 
-Os projetos foram divididos em 70\% para treino, 15\% para validação e 15\% para teste, \textbf{por projeto} (todos os pacotes de um projeto ficam na mesma parte), com estratificação pela classe predominante e semente 42. A validação foi usada apenas para calibrar o limiar de decisão: o maior recall com precisão de ao menos 80\%, que resultou em 0,356.
+O modelo de risco foi construído utilizando regressão logística, que estima a probabilidade de alto risco a partir de 11 medidas (Tabela 3) estruturais: fan-in, fan-out, classes em ciclo, dependências cruzadas e sete medidas do subgrafo do pacote (nós, arestas, tipos, Controllers, Services, Repositories e grau médio). As contagens e a severidade das violações são excluídas das entradas. As entradas são padronizadas com média e desvio do treino, e o treino usa gradiente descendente em lote, 600 épocas, taxa de aprendizado 0,08, regularização L2 0,01 e pesos que equilibram as classes. A função de custo é convexa, por isso não se usou parada antecipada.
 
-\hypertarget{otimizauxe7uxe3o-multiobjetivo}{%
-\subsection{Otimização multiobjetivo}\label{otimizauxe7uxe3o-multiobjetivo}}
+\needspace{6\baselineskip}
+\textbf{Tabela 3.} Medidas estruturais utilizadas como entrada para o modelo de regressão logística.
 
-Cada solução do NSGA-II é um vetor binário com um gene por pacote candidato (1 = refatorar). São candidatos os pacotes com violação e os pacotes com alto risco previsto; nos pacotes que apenas agrupam subpacotes, o risco previsto é ignorado, porque suas medidas incluem as dos subpacotes. Os dois objetivos, minimizados, são o problema restante (1 − benefício) e o esforço, medido como a fração das linhas de código do projeto contidas nos pacotes escolhidos. O benefício de um plano é 0,5 * a fração da severidade das violações que ele cobre + 0,5 * a fração do risco * tamanho que ele cobre. O NSGA-II usa torneio binário por posição na frente e distância de aglomeração, cruzamento de um ponto (probabilidade 0,9), mutação bit a bit (probabilidade 1/n) e elitismo. A população e o número de gerações crescem com o número de candidatos, de 50 até 200 indivíduos e de 50 até 300 gerações. Da frente final, a ferramenta recomenda o ponto de joelho, o mais distante da reta entre os extremos da curva (Satopää et al., 2011), e o melhor plano com até 20\% de esforço.
+{\footnotesize
+\begin{longtable}[]{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{8.1cm}>{\raggedleft\arraybackslash}p{1.1cm}@{}}
+\toprule\noalign{}
+\textbf{Medida} & \textbf{Origem} & \textbf{O que mede} & \textbf{Peso} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\multicolumn{4}{@{}p{\linewidth}@{}}{\scriptsize Pesos da regressão logística sobre as entradas padronizadas (média 0 e desvio 1 no treino): quanto maior o valor absoluto, maior a influência; peso positivo aumenta a probabilidade de alto risco. As medidas do subgrafo incluem os subpacotes do pacote.}
+\endlastfoot
+Fan-in ($C_a$) & métricas do pacote (Cypher) & Classes de outros pacotes que dependem de alguma classe do pacote (acoplamento aferente) & 0,07 \\
+Fan-out ($C_e$) & métricas do pacote (Cypher) & Soma, para cada classe do pacote, das classes de outros pacotes das quais ela depende (acoplamento eferente) & 0,95 \\
+Classes em ciclo & métricas do pacote (Cypher) & Classes do pacote que participam de um ciclo de dependências de até cinco classes & 0,46 \\
+Dependências cruzadas & métricas do pacote (Cypher) & Pacotes distintos do projeto dos quais o pacote depende & 2,86 \\
+Nós & subgrafo do pacote & Elementos do pacote no grafo (tipos, métodos, campos e construtores) & 0,01 \\
+Arestas & subgrafo do pacote & Relações cujas duas pontas estão dentro do pacote & $-$0,02 \\
+Tipos & subgrafo do pacote & Classes, interfaces e enumerações do pacote & 0,01 \\
+Controllers & subgrafo do pacote & Classes anotadas com @Controller ou @RestController & $-$0,05 \\
+Services & subgrafo do pacote & Classes anotadas com @Service & 0,00 \\
+Repositories & subgrafo do pacote & Classes anotadas com @Repository & $-$0,03 \\
+Grau médio & subgrafo do pacote & Média de conexões por elemento: $2 \times \text{arestas} / \text{nós}$ & 0,54 \\
+\end{longtable}
+}
 
-\hypertarget{muxe9todos-de-comparauxe7uxe3o-e-muxe9tricas}{%
-\subsection{Métodos de comparação e métricas}\label{muxe9todos-de-comparauxe7uxe3o-e-muxe9tricas}}
+Os projetos foram divididos em 70\% para treino, 15\% para validação e 15\% para teste (separação por projetos, não por módulos), com estratificação pela classe predominante e semente 42. A validação foi usada apenas para calibrar o limiar de decisão: o maior recall com precisão de ao menos 80\%, que resultou em 0,356.
 
-Para cada projeto com ao menos cinco pacotes e alguma violação, ordenaram-se os pacotes pela severidade e calculou-se S20, a fração da severidade nos primeiros 20\% dos pacotes (com interpolação para frações de pacote). Como controles, mediu-se a fração das linhas de código nesses pacotes e construiu-se um modelo nulo que redistribui as violações do projeto ao acaso, proporcionalmente às linhas de código de cada pacote (20 sorteios por projeto). A diferença entre S20 real e nulo foi testada com o teste de postos sinalizados de Wilcoxon (Wilcoxon, 1945). A sensibilidade foi avaliada excluindo a regra mais frequente (MVC14), as duas regras Singleton mais amplas (SG\_06 e SG\_11) ou mantendo só violações HIGH ou só de camadas.
+Na fase de otimização multiobjetivo, cada solução do NSGA-II é um vetor binário com um gene por pacote candidato, em que 1 indica que o pacote será refatorado. São candidatos os pacotes com violação e os pacotes com alto risco previsto; nos pacotes que apenas agrupam subpacotes, o risco previsto é ignorado, porque suas medidas incluem as dos subpacotes e superestimam sua importância. O esforço de um plano é a fração das linhas de código do projeto contidas nos pacotes escolhidos, uma estimativa simples do trabalho de refatoração que permanece comparável entre projetos de tamanhos diferentes. O benefício combina duas fontes de informação, ambas normalizadas pelo total do projeto:
+\begin{equation}
+  B(P) = \alpha\,\frac{\sum_{p \in P} S_p}{\sum_{p \in T} S_p}
+       + (1-\alpha)\,\frac{\sum_{p \in P} \hat{y}_p\,t_p}{\sum_{p \in T} \hat{y}_p\,t_p},
+  \qquad
+  E(P) = \frac{\sum_{p \in P} t_p}{\sum_{p \in T} t_p},
+  \label{eq:beneficio}
+\end{equation}
+em que $P$ é o conjunto de pacotes escolhidos pelo plano, $T$ o conjunto de todos os pacotes do projeto, $S_p$ a severidade ponderada do pacote $p$ (Equação~\ref{eq:severidade}), $\hat{y}_p$ a probabilidade de alto risco prevista pelo modelo, $t_p$ o tamanho do pacote em linhas de código e $\alpha = 0{,}5$ o peso que equilibra as duas fontes. A primeira parcela representa os problemas concretos apontados pelas regras; a segunda, o risco estrutural ponderado pela quantidade de código exposta a ele. O NSGA-II minimiza, simultaneamente, o problema restante $1 - B(P)$ e o esforço $E(P)$.
 
-No conjunto de teste, relatam-se acurácia, precisão, recall, F1 e PR-AUC, adequada a classes desequilibradas (Saito \& Rehmsmeier, 2015), com intervalos de confiança de 95\% por reamostragem de projetos (\emph{bootstrap}, 1.000 amostras; Efron \& Tibshirani, 1993). Duas linhas de base mostram quanto do rótulo é explicado diretamente pelas entradas: a regra "três ou mais dependências cruzadas ou alguma classe em ciclo" e a parte estrutural do índice. Para medir a utilidade do risco na localização de violações, os pacotes de cada projeto de teste foram ordenados pelo risco previsto, pelo tamanho em linhas de código, ao acaso e pela severidade real (ótimo), medindo a fração da severidade capturada pelos 20\% iniciais e o Popt (Mende \& Koschke, 2010).
+O NSGA-II usa torneio binário por posição na frente e distância de aglomeração, cruzamento de um ponto (probabilidade 0,9), mutação bit a bit (probabilidade 1/n) e elitismo. A população e o número de gerações crescem com o número de candidatos, de 50 até 200 indivíduos e de 50 até 300 gerações. Da frente final, a ferramenta recomenda o ponto de joelho, o mais distante da reta entre os extremos da curva (Satopää et al., 2011), e o melhor plano com até 20\% de esforço.
 
-O NSGA-II foi executado nos 147 projetos de teste. Com até 16 candidatos, a frente exata foi obtida por enumeração e comparada com a encontrada; acima disso, o hipervolume (Zitzler \& Thiele, 1999) foi comparado com o de um método guloso que acumula pacotes em ordem de benefício ÷ esforço, e a busca foi repetida com cinco sementes. Mediram-se também o tempo de execução, com seis projetos processados em paralelo numa máquina de oito núcleos, e a comparação com a formulação anterior, de cinco objetivos com fatores de melhoria simulados, limitada a 120 s por projeto.
+Para avaliar a abordagem, em cada projeto com ao menos cinco pacotes e alguma violação, ordenaram-se os pacotes pela severidade e calculou-se a fração da severidade concentrada nos primeiros 20\% dos pacotes (com interpolação para frações de pacote). Como controles, mediu-se a fração das linhas de código nesses pacotes e construiu-se um modelo nulo que redistribui as violações do projeto ao acaso, proporcionalmente às linhas de código de cada pacote (20 sorteios por projeto). A diferença entre a concentração real e a do modelo nulo foi testada com o teste de postos sinalizados de Wilcoxon (Wilcoxon, 1945). A sensibilidade foi avaliada excluindo a regra mais frequente (MVC14), as duas regras Singleton mais amplas (SG\_06 e SG\_11) ou mantendo só violações HIGH ou só de camadas.
 
-\hypertarget{protocolo-e-reproduuxe7uxe3o}{%
-\subsection{Protocolo e reprodução}\label{protocolo-e-reproduuxe7uxe3o}}
+Quanto ao modelo de risco, no conjunto de teste relatam-se acurácia, precisão, recall, F1 e PR-AUC, adequada a classes desequilibradas (Saito \& Rehmsmeier, 2015), com intervalos de confiança de 95\% por reamostragem de projetos (\emph{bootstrap}, 1.000 amostras; Efron \& Tibshirani, 1993). Duas linhas de base mostram quanto do rótulo é explicado diretamente pelas entradas: a regra "três ou mais dependências cruzadas ou alguma classe em ciclo" e a parte estrutural do índice. Para medir a utilidade do risco na localização de violações, os pacotes de cada projeto de teste foram ordenados pelo risco previsto, pelo tamanho em linhas de código, ao acaso e pela severidade real (ótimo), medindo a fração da severidade capturada pelos 20\% iniciais e o Popt (Mende \& Koschke, 2010).
 
-Os parâmetros, a divisão e as sementes são fixos. Os scripts de análise leem o corpus e aplicam o modelo treinado, sem retreiná-lo, e gravam todos os números e figuras. O código dos três serviços e dos scripts está disponível no repositório do projeto.
+Já para a otimização, o NSGA-II foi executado nos 147 projetos de teste. Com até 16 candidatos, a frente exata foi obtida por enumeração e comparada com a encontrada; acima disso, o hipervolume (Zitzler \& Thiele, 1999) foi comparado com o de um método guloso que acumula pacotes em ordem de benefício ÷ esforço, e a busca foi repetida com cinco sementes. Mediram-se também o tempo de execução, com seis projetos processados em paralelo numa máquina de oito núcleos, e a comparação com a formulação anterior, de cinco objetivos com fatores de melhoria simulados, limitada a 120 s por projeto.
+
+Com o modelo treinado, a abordagem é aplicada a cada projeto de forma independente, da entrada do código à recomendação de refatoração (Figura~\ref{fig:fluxo-abordagem}). A solução é composta por três serviços. Um serviço em Java (Java 25, Spring Boot 4.1.1) analisa o código e constrói o grafo no Neo4j 5.26; um serviço em Python 3.12 calcula o risco e executa o NSGA-II; e uma aplicação web em Go 1.26 orquestra as etapas e apresenta os resultados.
+
+\begin{figure}[htbp]
+\centering
+\input{figures/fig_fluxo_abordagem.tex}
+\caption{Fluxo da abordagem: análise de um projeto individual, da entrada do código à recomendação de refatoração. As cores indicam o serviço responsável por cada etapa.}
+\label{fig:fluxo-abordagem}
+\end{figure}
+
+Por fim, para garantir a reprodução, os parâmetros, a divisão e as sementes são fixos. Os scripts de análise leem o corpus e aplicam o modelo treinado, sem retreiná-lo, e gravam todos os números e figuras. O código dos três serviços e dos scripts está disponível no repositório do projeto.
 
 \hypertarget{resultados-e-discussuxe3o}{%
 \section{Resultados e discussão}\label{resultados-e-discussuxe3o}}
 
-\hypertarget{panorama-das-violauxe7uxf5es}{%
-\subsection{Panorama das violações}\label{panorama-das-violauxe7uxf5es}}
-
-A Figura 2 mostra a distribuição das 120.951 violações. Práticas do Spring dominam (70,8\%), com destaque para a injeção por campo (44,0\%) e para métodos de leitura e escrita sem @Transactional (17,8\% e 8,8\%). Violações de camada propriamente ditas, como um Controller que usa um Repository, somam 4,0\%. As regras Singleton respondem por 21,1\%, mas a análise revelou que duas delas são amplas demais: SG\_06 marca todo enum e SG\_11 marca toda classe com construtor privado. Esse é um limite das regras discutido adiante.
+Iniciando pelo panorama das violações, a Figura~\ref{fig:regras} mostra a distribuição das 120.951 violações. Práticas do Spring dominam (70,8\%), com destaque para a injeção por campo (44,0\%) e para métodos de leitura e escrita sem @Transactional (17,8\% e 8,8\%). Violações de camada propriamente ditas, como um Controller que usa um Repository, somam 4,0\%. As regras Singleton respondem por 21,1\%, mas a análise revelou que duas delas são amplas demais: SG\_06 marca todo enum e SG\_11 marca toda classe com construtor privado. Esse é um limite das regras discutido adiante.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image4.png}
+\input{figures/fig_regras.tex}
 \caption{Ocorrências por regra no corpus, agrupadas por categoria.}
+\label{fig:regras}
 \end{figure}
 
-
-\hypertarget{concentrauxe7uxe3o-das-violauxe7uxf5es}{%
-\subsection{Concentração das violações}\label{concentrauxe7uxe3o-das-violauxe7uxf5es}}
-
-Em 891 projetos, os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade (IC 95\% da mediana: 90,5\% a 92,9\%; quartis: 78,3\% e 98,6\%), e 73,8\% dos projetos passaram de 80\% (Figura 3). O tamanho explica parte disso: esses pacotes contêm 44,8\% das linhas de código, e o modelo nulo proporcional ao tamanho produziria uma concentração mediana de 76,4\%. Ainda assim, a concentração real superou a nula em 76,7\% dos projetos, com diferença mediana de 10,3 pontos percentuais (Wilcoxon, p \textless{} $10^{-80}$). A conclusão se mantém, e se fortalece, nas análises de sensibilidade (Tabela 2).
+Quanto à concentração das violações, em 891 projetos, os 20\% de pacotes mais graves concentraram, na mediana, 91,7\% da severidade (IC 95\% da mediana: 90,5\% a 92,9\%; quartis: 78,3\% e 98,6\%), e 73,8\% dos projetos passaram de 80\% (Figura~\ref{fig:concentracao}). O tamanho explica parte disso: esses pacotes contêm 44,8\% das linhas de código, e o modelo nulo proporcional ao tamanho produziria uma concentração mediana de 76,4\%. Ainda assim, a concentração real superou a nula em 76,7\% dos projetos, com diferença mediana de 10,3 pontos percentuais (Wilcoxon, $p < 10^{-80}$). A conclusão se mantém, e se fortalece, nas análises de sensibilidade (Tabela 4).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image3.png}
+\input{figures/fig_concentracao.tex}
 \caption{Fração acumulada da severidade e das linhas de código por fração de pacotes (mediana e quartis entre projetos).}
+\label{fig:concentracao}
 \end{figure}
 
-
-\textbf{Tabela 2.} Concentração da severidade (S20) por variante da contagem.
+\needspace{6\baselineskip}
+\textbf{Tabela 4.} Concentração da severidade nos 20\% de pacotes mais graves, por variante da contagem.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3580}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1852}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1481}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2840}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1852}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2716}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{Variante}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{Projetos}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{S20 mediano}
+\textbf{Concentração mediana}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{Projetos com S20 $\geq$ 80\%}
+\textbf{Projetos acima de 80\%}
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
@@ -264,69 +372,56 @@ Só violações de camada & 276 & 100,0\% & 98,9\% \\
 
 O resultado replica para violações arquiteturais a concentração observada para defeitos (Fenton \& Ohlsson, 2000; Boehm \& Basili, 2001; Ostrand et al., 2005). Em termos práticos, uma equipe que inspecione um quinto dos pacotes encontra a maior parte da severidade; em termos de código, porém, isso corresponde a cerca de 45\% das linhas, o que reforça a necessidade de considerar o esforço, como faz o NSGA-II. As variantes mais restritas produzem concentrações próximas de 100\% em parte porque as violações ficam mais raras.
 
-\hypertarget{desempenho-e-utilidade-do-modelo}{%
-\subsection{Desempenho e utilidade do modelo}\label{desempenho-e-utilidade-do-modelo}}
-
-No teste (147 projetos, 8.373 pacotes), o modelo obteve acurácia de 90,2\% (IC 95\%: 89,2\% a 91,0\%), precisão de 80,1\% (74,9\% a 83,4\%), recall de 97,6\% (96,2\% a 98,4\%), F1 de 88,0\% (84,3\% a 90,3\%) e PR-AUC de 98,1\% (96,7\% a 98,8\%) (Figura 4). Os valores de treino foram próximos (acurácia de 91,1\% e PR-AUC de 97,6\%), sem sinal de sobreajuste. Excluindo os 17 projetos de teste com estrutura de pacotes quase idêntica à de um projeto de treino (Jaccard $\geq$ 0,8), os resultados praticamente não mudaram (acurácia de 90,0\% e PR-AUC de 98,2\%).
+Em relação ao desempenho do modelo de risco, no teste (147 projetos, 8.373 pacotes) o modelo obteve acurácia de 90,2\% (IC 95\%: 89,2\% a 91,0\%), precisão de 80,1\% (74,9\% a 83,4\%), recall de 97,6\% (96,2\% a 98,4\%), F1 de 88,0\% (84,3\% a 90,3\%) e PR-AUC de 98,1\% (96,7\% a 98,8\%) (Figura~\ref{fig:pr}). Os valores de treino foram próximos (acurácia de 91,1\% e PR-AUC de 97,6\%), sem sinal de sobreajuste. Excluindo os 17 projetos de teste com estrutura de pacotes quase idêntica à de um projeto de treino (Jaccard $\geq$ 0,8), os resultados praticamente não mudaram (acurácia de 90,0\% e PR-AUC de 98,2\%).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image1.png}
+\input{figures/fig_precisao_recall.tex}
 \caption{Curva precisão × recall no conjunto de teste, com o ponto do limiar calibrado.}
+\label{fig:pr}
 \end{figure}
-
-\hl{Vou tirar esse acaso, ficou confuso para entender de primeira}.
 
 Esses números, no entanto, devem ser lidos com cautela. A regra de uma linha "três ou mais dependências cruzadas ou alguma classe em ciclo" acerta 95,4\% dos rótulos do teste, e a parte estrutural do índice acerta 96,8\%. Com os limites do corpus, três dependências cruzadas sozinhas já ultrapassam o corte de ALTO RISCO, e essa parcela responde por cerca de 78\% do índice médio dos pacotes de alto risco. Os pesos do modelo confirmam a leitura: dependências cruzadas (2,86) e fan-out (0,95) dominam, seguidos pelo grau médio (0,54) e pelas classes em ciclo (0,46). O modelo, portanto, reconstrói um índice que é, em boa parte, função das próprias entradas.
 
-Por isso a avaliação decisiva é se o risco previsto, que não recebe as violações, as localiza (Figura 5). Nos 136 projetos de teste com violações, os 20\% de pacotes de maior risco capturaram, na mediana, 58,2\% da severidade (IC 95\%: 51,6\% a 64,8\%), bem acima do acaso (19,9\%; Wilcoxon, p \textless{} $10^{-20}$) e abaixo do ótimo (88,6\%). Os pacotes marcados como alto risco tinham violação em 50,3\% dos casos, contra 18,5\% dos demais. Porém, ordenar os pacotes apenas pelo número de linhas de código produziu a mesma captura mediana (58,2\%; diferença não significativa, p = 0,54), Popt semelhante (0,855 contra 0,865) e PR-AUC ligeiramente maior para a presença de violação (0,58 contra 0,56). Para localizar violações, o risco previsto equivale, na prática, a olhar primeiro os pacotes maiores.
+Por isso a avaliação decisiva é se o risco previsto, que não recebe as violações, as localiza (Figura~\ref{fig:ganho}). Nos 136 projetos de teste com violações, os 20\% de pacotes de maior risco capturaram, na mediana, 58,2\% da severidade (IC 95\%: 51,6\% a 64,8\%), bem acima do acaso (19,9\%; Wilcoxon, $p < 10^{-20}$) e abaixo do ótimo (88,6\%). Os pacotes marcados como alto risco tinham violação em 50,3\% dos casos, contra 18,5\% dos demais. Porém, ordenar os pacotes apenas pelo número de linhas de código produziu a mesma captura mediana (58,2\%; diferença não significativa, $p = 0{,}54$), Popt semelhante (0,855 contra 0,865) e PR-AUC ligeiramente maior para a presença de violação (0,58 contra 0,56). Para localizar violações, o risco previsto equivale, na prática, a olhar primeiro os pacotes maiores.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image8.png}
-\caption{Fração da severidade encontrada ao inspecionar os pacotes na ordem do risco previsto, do tamanho, ao acaso e da severidade real (mediana dos projetos de teste).}
+\input{figures/fig_ganho.tex}
+\caption{Fração da severidade encontrada ao inspecionar os pacotes na ordem do risco previsto, do tamanho e da severidade real (mediana dos projetos de teste).}
+\label{fig:ganho}
 \end{figure}
 
-\hl{Retira a linha que mostra o acaso}.
-
-Esse resultado não invalida a abordagem, mas delimita o papel de cada componente. A localização exata das violações é feita pelas regras; o modelo resume um risco estrutural, interpretável fator a fator, que inclui pacotes sem violação. Dos 21.739 pacotes de alto risco do corpus, 43,7\% não têm violação, e 37,6\% do total estão nessa classe por dependerem de três ou mais pacotes (Figura 6). Acoplamento excessivo e ciclos são sintomas estruturais de erosão reconhecidos na literatura (Martin, 2003; Melton \& Tempero, 2007; Li et al., 2022), não capturados pelas regras MVC e Singleton. Ao mesmo tempo, 60,2\% dos pacotes com violação são de alto risco e só 6,9\% são de baixo risco, o que mostra que as duas visões se sobrepõem. A escolha de pesos iguais no índice mostrou-se pouco sensível: em 500 sorteios de pesos aleatórios, o conjunto de alto risco manteve semelhança mediana de 0,92 (Jaccard) com o original.
+Esse resultado não invalida a abordagem, mas delimita o papel de cada componente. A localização exata das violações é feita pelas regras; o modelo resume um risco estrutural, interpretável fator a fator, que inclui pacotes sem violação. Dos 21.739 pacotes de alto risco do corpus, 43,7\% não têm violação, e 37,6\% do total estão nessa classe por dependerem de três ou mais pacotes (Figura~\ref{fig:alto-risco}). Acoplamento excessivo e ciclos são sintomas estruturais de erosão reconhecidos na literatura (Martin, 2003; Melton \& Tempero, 2007; Li et al., 2022), não capturados pelas regras MVC e Singleton. Ao mesmo tempo, 60,2\% dos pacotes com violação são de alto risco e só 6,9\% são de baixo risco, o que mostra que as duas visões se sobrepõem. A escolha de pesos iguais no índice mostrou-se pouco sensível: em 500 sorteios de pesos aleatórios, o conjunto de alto risco manteve semelhança mediana de 0,92 (Jaccard) com o original.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image2.png}
+\input{figures/fig_alto_risco.tex}
 \caption{Pacotes de alto risco do corpus, separados entre os que têm violação e o motivo estrutural dos que não têm.}
+\label{fig:alto-risco}
 \end{figure}
 
+Por fim, quanto à qualidade e ao custo do NSGA-II, dos 147 projetos de teste, 143 tinham pacotes candidatos (mediana de 8, máximo de 493). Nos 91 projetos com até 16 candidatos, o NSGA-II alcançou em média 99,9\% do hipervolume da frente exata. Ele encontrou, em média, 86\% dos planos dessa frente, e a frente completa em 70\% dos projetos: os planos que faltam ficam muito próximos dos encontrados e quase não alteram a área coberta. Nos 52 projetos maiores, o NSGA-II e o método guloso praticamente empataram (razão mediana dos hipervolumes de 1,003; NSGA-II maior ou igual em 54\% dos casos), e o desvio-padrão do hipervolume entre cinco sementes foi de 0,0001 na mediana. O empate é esperado: como benefício e esforço somam pacote a pacote, o problema equivale a uma mochila com dois objetivos, para a qual a ordem gulosa é uma boa aproximação. A vantagem do NSGA-II está em entregar a frente inteira de uma vez e em admitir, no futuro, objetivos não aditivos, como o efeito de refatorar um pacote sobre os que dependem dele.
 
-\hypertarget{qualidade-e-custo-do-nsga-ii}{%
-\subsection{Qualidade e custo do NSGA-II}\label{qualidade-e-custo-do-nsga-ii}}
-
-Dos 147 projetos de teste, 143 tinham pacotes candidatos (mediana de 8, máximo de 493). Nos 91 projetos com até 16 candidatos, o NSGA-II alcançou em média 99,9\% do hipervolume da frente exata. Ele encontrou, em média, 86\% dos planos dessa frente, e a frente completa em 70\% dos projetos: os planos que faltam ficam muito próximos dos encontrados e quase não alteram a área coberta. Nos 52 projetos maiores, o NSGA-II e o método guloso praticamente empataram (razão mediana dos hipervolumes de 1,003; NSGA-II maior ou igual em 54\% dos casos), e o desvio-padrão do hipervolume entre cinco sementes foi de 0,0001 na mediana. O empate é esperado: como benefício e esforço somam pacote a pacote, o problema equivale a uma mochila com dois objetivos, para a qual a ordem gulosa é uma boa aproximação. A vantagem do NSGA-II está em entregar a frente inteira de uma vez e em admitir, no futuro, objetivos não aditivos, como o efeito de refatorar um pacote sobre os que dependem dele.
-
-No projeto piloto (Figura 7), com 9 pacotes e 5 candidatos, a frente encontrada coincide com a exata (16 planos), e o plano recomendado indica dois pacotes que, com 29\% do esforço, resolvem 47\% do benefício e 65\% da severidade das violações. Na mediana dos projetos de teste, o plano recomendado toca 22\% dos pacotes e 26\% das linhas de código e obtém 65\% do benefício. \hl{A formulação anterior, de cinco objetivos com fatores simulados, gerava frentes com mediana de 46 planos e um joelho que recomendava refatorar 85\% dos pacotes, o que pouco ajuda a decidir.}
+No projeto piloto (Figura~\ref{fig:piloto}), com 9 pacotes e 5 candidatos, a frente encontrada coincide com a exata (16 planos), e o plano recomendado indica dois pacotes que, com 29\% do esforço, resolvem 47\% do benefício e 65\% da severidade das violações. Na mediana dos projetos de teste, o plano recomendado toca 22\% dos pacotes e 26\% das linhas de código e obtém 65\% do benefício. \hl{A formulação anterior, de cinco objetivos com fatores simulados, gerava frentes com mediana de 46 planos e um joelho que recomendava refatorar 85\% dos pacotes, o que pouco ajuda a decidir.}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image7.png}
+\input{figures/fig_frente_piloto.tex}
 \caption{Frente de Pareto do NSGA-II no projeto piloto, com o plano recomendado (joelho).}
+\label{fig:piloto}
 \end{figure}
 
-\hl{Arrumar o gráfico está com informações sobrepondo o gráfico principal}
-
-O tempo da otimização, incluindo a leitura do grafo, teve mediana de 0,6 s e máximo de 22,5 s, com até 493 candidatos (Figura 8). O tempo cresce com o número de candidatos até cerca de 50 e depois se estabiliza perto de 10 s, porque a população e o número de gerações atingem os tetos de 200 e 300; os maiores tempos vêm, em boa parte, da leitura dos grafos maiores. \hl{A formulação anterior, ao contrário, recortava o subgrafo de cada pacote varrendo o grafo inteiro e ultrapassou 120 s em 2 projetos grandes.} Os resultados estão alinhados com Wolschick et al. (2024), que encontraram o NSGA-II tão bom ou melhor que o NSGA-III em problemas de até três objetivos.
+O tempo da otimização, incluindo a leitura do grafo, teve mediana de 0,6 s e máximo de 22,5 s, com até 493 candidatos (Figura~\ref{fig:tempo}). O tempo cresce com o número de candidatos até cerca de 50 e depois se estabiliza perto de 10 s, porque a população e o número de gerações atingem os tetos de 200 e 300; os maiores tempos vêm, em boa parte, da leitura dos grafos maiores. \hl{A formulação anterior, ao contrário, recortava o subgrafo de cada pacote varrendo o grafo inteiro e ultrapassou 120 s em 2 projetos grandes.} Os resultados estão alinhados com Wolschick et al. (2024), que encontraram o NSGA-II tão bom ou melhor que o NSGA-III em problemas de até três objetivos.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/image6.png}
+\input{figures/fig_tempo.tex}
 \caption{Tempo do NSGA-II por projeto de teste em função do número de pacotes candidatos.}
+\label{fig:tempo}
 \end{figure}
 
-\hl{Arrumar o gráfico, pois também está sobrepondo informações, revêm de ler e interpretar}
-
-\hypertarget{limites-e-ameauxe7as-uxe0-validade}{%
-\subsection{Limites e ameaças à validade}\label{limites-e-ameauxe7as-uxe0-validade}}
-
-\emph{Validade de construto.} O rótulo é um índice derivado das métricas, não uma medida direta de custo de manutenção, e é dominado pelas dependências cruzadas; por isso o modelo foi avaliado também pela localização das violações. \hl{As regras SG\_06 e SG\_11 geram falsos positivos (19,0\% das ocorrências) e, se corrigidas, retirariam 1.331 pacotes (6,1\%) da classe de alto risco; três regras MVC são heurísticas.} Os cortes do índice são calculados no corpus inteiro, e há projetos quase duplicados, embora sua exclusão não tenha alterado os resultados. O corpus contém apenas projetos Java Spring de código aberto do GitHub, com as limitações conhecidas desse tipo de amostra (Kalliamvakou et al., 2014). As métricas do modelo vêm de uma única divisão, mitigada pelos intervalos de confiança por reamostragem de projetos.
+Esses resultados, contudo, têm limites. O rótulo é um índice derivado das métricas, não uma medida direta de custo de manutenção, e é dominado pelas dependências cruzadas; por isso o modelo foi avaliado também pela localização das violações. \hl{As regras SG\_06 e SG\_11 geram falsos positivos (19,0\% das ocorrências) e, se corrigidas, retirariam 1.331 pacotes (6,1\%) da classe de alto risco; três regras MVC são heurísticas.} Os cortes do índice são calculados no corpus inteiro, e há projetos quase duplicados, embora sua exclusão não tenha alterado os resultados. O corpus contém apenas projetos Java Spring de código aberto do GitHub, com as limitações conhecidas desse tipo de amostra (Kalliamvakou et al., 2014). As métricas do modelo vêm de uma única divisão, mitigada pelos intervalos de confiança por reamostragem de projetos.
 
 \hypertarget{conclusuxe3o}{%
 \section{Conclusão}\label{conclusuxe3o}}

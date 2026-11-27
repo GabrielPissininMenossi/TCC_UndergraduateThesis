@@ -1,0 +1,33 @@
+% Gerado por TCC_Artigo/analises/06_figuras_latex.py a partir dos resultados das análises.
+% Para mudar os dados, rode o script de novo; para mudar só a aparência, edite aqui.
+\begin{tikzpicture}
+\begin{axis}[
+  xbar, bar width=7pt, bar shift=0pt,
+  scale only axis, width=7.4cm, height=7.6cm,
+  symbolic y coords={R15,R14,R13,R12,R11,R10,R9,R8,R7,R6,R5,R4,R3,R2,R1},
+  ytick={R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,R13,R14,R15},
+  yticklabels={{MVC14 injeção por campo},{MVC13 leitura sem @Transactional},{SG\_11 construtor privado sem proteção},{MVC12 escrita sem @Transactional},{SG\_06 enum (Singleton por enum)},{MVC06 Service trata HTTP},{MVC15 tratamento genérico de exceções},{SG\_02 inicialização antecipada},{MVC17 Controller com fan-out excessivo},{MVC04 Controller sem rotas},{MVC05 Controller expõe @Entity},{MVC10 autoinvocação @Transactional},{SG\_07 vulnerável à desserialização},{MVC01 Controller usa Repository},{outras 14 regras}},
+  y tick label style={font=\scriptsize}, ytick style={draw=none},
+  enlarge y limits=0.04,
+  xmin=0, xmax=78000, scaled x ticks=false,
+  xtick={0,20000,40000,60000}, xticklabels={0,20 mil,40 mil,60 mil},
+  xlabel={Ocorrências no corpus},
+  xmajorgrids, major grid style={draw=black!10}, axis y line*=left, axis x line*=bottom,
+  point meta=explicit symbolic, nodes near coords, nodes near coords align={horizontal},
+  every node near coord/.append style={anchor=west, font=\scriptsize, black},
+  legend style={at={(0.98,0.03)}, anchor=south east, font=\scriptsize, draw=none, fill=white, fill opacity=0.9,
+                text opacity=1, cells={anchor=west}},
+  area legend, reverse legend=false,
+]
+\addplot[fill=claranja, draw=none] coordinates {(53187,R1) [53.187 (44,0\,\%)] (21559,R2) [21.559 (17,8\,\%)] (10615,R4) [10.615 (8,8\,\%)] (217,R12) [217 (0,2\,\%)]};
+\addlegendentry{Práticas Spring (70,8\,\%)}
+\addplot[fill=cverde, draw=none] coordinates {(15882,R3) [15.882 (13,1\,\%)] (7046,R5) [7.046 (5,8\,\%)] (2095,R8) [2.095 (1,7\,\%)] (210,R13) [210 (0,2\,\%)]};
+\addlegendentry{Singleton (21,1\,\%)}
+\addplot[fill=camarelo, draw=none] coordinates {(3001,R7) [3.001 (2,5\,\%)] (999,R9) [999 (0,8\,\%)] (833,R10) [833 (0,7\,\%)]};
+\addlegendentry{Responsabilidades (4,1\,\%)}
+\addplot[fill=cazul, draw=none] coordinates {(4097,R6) [4.097 (3,4\,\%)] (450,R11) [450 (0,4\,\%)] (165,R14) [165 (0,1\,\%)]};
+\addlegendentry{Camadas MVC (4,0\,\%)}
+\addplot[fill=ccinza, draw=none] coordinates {(595,R15) [595 (0,5\,\%)]};
+\addlegendentry{Demais regras}
+\end{axis}
+\end{tikzpicture}
