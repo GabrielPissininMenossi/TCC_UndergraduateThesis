@@ -36,7 +36,7 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
+\usepackage[table]{xcolor} % table: listras nas linhas da Tabela 2
 \usepackage{graphicx}
 % Figuras em LaTeX nativo (TikZ e pgfplots); os arquivos ficam em figures/*.tex
 \usepackage{tikz}
@@ -104,7 +104,12 @@
 
 \renewcommand{\hl}[1]{\textcolor{red}{#1}}
 \title{Aplicação de Inteligência Artificial (\emph{Machine Learning} e Algoritmos Genéticos) para Recomendações de Manutenção em Padrões de Projeto MVC e Singleton em Sistemas Java Spring}
-\author{Gabriel Pissinin Menossi\\Unoeste -- Universidade do Oeste Paulista\\FIPP -- Faculdade de Informática de Presidente Prudente\\DOI: ainda não possui}
+\author{%
+  Gabriel Pissinin Menossi\thanks{Autor. Currículo Lattes: \url{http://lattes.cnpq.br/9011067942654028}}\\[2pt]
+  {\normalsize Orientador: Francisco Virginio Maracci\thanks{Orientador. Currículo Lattes: \url{http://lattes.cnpq.br/2325416771118545}}}\\[8pt]
+  {\normalsize Unoeste -- Universidade do Oeste Paulista}\\
+  {\normalsize FIPP -- Faculdade de Informática de Presidente Prudente}\\
+  {\normalsize DOI: ainda não possui}}
 \date{}
 
 \begin{document}
@@ -180,9 +185,7 @@ O corpus soma 4,84 milhões de nós, 11,4 milhões de arestas e 12,9 milhões de
 
 O pré-processamento começa pela análise sintática de cada arquivo \texttt{.java} com o JavaParser 3.26.3, biblioteca de código aberto que lê o código-fonte Java, o divide em tokens (palavras-chave, identificadores e símbolos) e organiza esses tokens em uma árvore sintática abstrata (AST). A AST representa a estrutura hierárquica do arquivo: a classe contém campos e métodos, os métodos contêm comandos e os comandos contêm expressões, como chamadas de método.
 
-A AST, porém, descreve apenas a forma do código, e não o significado dos nomes que nele aparecem. Para isso foi usado o Symbol Solver, módulo do JavaParser que resolve cada nome para o tipo a que se refere. É essa resolução que permite registrar dependências reais entre classes. O Symbol Solver foi configurado para consultar, nesta ordem, as classes da biblioteca padrão do Java fornecidas pelo JDK (Java Development Kit, o kit de desenvolvimento da linguagem), o próprio código-fonte do projeto, e as bibliotecas disponíveis no ambiente do analisador. Tipos que não puderam ser resolvidos, como os de dependências externas do projeto, foram registrados como externos e não entraram nas métricas de acoplamento.
-
-A análise é feita diretamente sobre o código-fonte, sem compilar o projeto. Essa escolha viabiliza o processamento de centenas de repositórios de terceiros, muitos dos quais não iriam compilar fora do ambiente original de seus autores por depender de bibliotecas privadas ou de versões específicas do Java.
+A AST, porém, descreve apenas a forma do código, e não o significado dos nomes que nele aparecem. Para isso foi usado o Symbol Solver, módulo do JavaParser que resolve cada nome para o tipo a que se refere. É essa resolução que permite registrar dependências reais entre classes. O Symbol Solver foi configurado para consultar, nesta ordem, as classes da biblioteca padrão do Java fornecidas pelo JDK (Java Development Kit, o kit de desenvolvimento da linguagem), o próprio código-fonte do projeto, e as bibliotecas disponíveis no ambiente do analisador. Tipos que não puderam ser resolvidos, como os de dependências externas do projeto, foram registrados como externos e não entraram nas métricas de acoplamento. A análise é feita diretamente sobre o código-fonte, sem compilar o projeto. Essa escolha viabiliza o processamento de repositórios de terceiros, que poderiam não compilar fora do ambiente original de seus autores, por dependerem de bibliotecas privadas ou versões específicas do Java.
 
 A partir das árvores resolvidas, constrói-se o grafo semântico do projeto. Seus nós representam projeto, pacote, arquivo, tipo (classe, interface ou enumeração), método, campo e construtor. Suas arestas representam contenção (um pacote contém arquivos e um arquivo contém tipos), declaração (um tipo declara métodos e campos), dependência entre tipos, chamada de método e uso de tipos como campo, parâmetro, retorno, instanciação, herança, implementação e exceção. O grafo é gravado no Neo4j em lotes de 2.000 operações, cada um enviado em uma única transação, o que reduz o número de idas ao banco de dados e limita a memória consumida por transação.
 
@@ -205,33 +208,33 @@ Com o grafo construído, é o momento de detectar sobre ele as violações e reg
 \multicolumn{5}{@{}p{\linewidth}@{}}{\scriptsize * Regras heurísticas, baseadas no nome dos métodos. A numeração não inclui MVC16 porque essa regra depende da modelagem dos parâmetros dos métodos, ainda não representada no grafo.}
 \endlastfoot
 MVC01 & Controller depende de Repository & HIGH & Controller que acessa diretamente um Repository, pulando a camada Service & 165 \\
-MVC02 & Service depende de Controller & HIGH & Service que depende de um Controller (dependência invertida entre camadas) & 8 \\
+\rowcolor{cLavanda!35}MVC02 & Service depende de Controller & HIGH & Service que depende de um Controller (dependência invertida entre camadas) & 8 \\
 MVC03 & Repository depende de Controller ou Service & HIGH & Repository que depende de uma camada superior & 21 \\
-SG01 & Controller Singleton & MEDIUM & Controller implementado como Singleton manual (construtor privado, campo estático da própria classe e método \texttt{getInstance}), em vez de deixar o Spring gerenciar a instância & 0 \\
+\rowcolor{cLavanda!35}SG01 & Controller Singleton & MEDIUM & Controller implementado como Singleton manual (construtor privado, campo estático da própria classe e método \texttt{getInstance}), em vez de deixar o Spring gerenciar a instância & 0 \\
 MVC04 & Controller sem rotas & LOW & Classe anotada como Controller sem nenhum método mapeado para requisições (@GetMapping, @PostMapping etc.) & 833 \\
-MVC05 & Controller expõe entidade JPA & HIGH & Método de Controller que devolve diretamente uma entidade @Entity, em vez de um DTO & 450 \\
+\rowcolor{cLavanda!35}MVC05 & Controller expõe entidade JPA & HIGH & Método de Controller que devolve diretamente uma entidade @Entity, em vez de um DTO & 450 \\
 MVC06 & Service trata HTTP & HIGH & Service que devolve ou recebe tipos da camada web (ResponseEntity, HttpServletRequest, HttpServletResponse, HttpSession) & 4.097 \\
-MVC07 & Repository usa tipos da camada web & MEDIUM & Repository que depende de tipos HTTP ou de classes de pacotes de DTO & 76 \\
+\rowcolor{cLavanda!35}MVC07 & Repository usa tipos da camada web & MEDIUM & Repository que depende de tipos HTTP ou de classes de pacotes de DTO & 76 \\
 MVC08 & Dependência invertida por chamada transitiva & HIGH & Repository ou Service que, por uma cadeia de até quatro chamadas, acaba invocando uma camada superior & 3 \\
-MVC09 & Ciclo entre Services & MEDIUM & Dois Services que se chamam mutuamente & 11 \\
+\rowcolor{cLavanda!35}MVC09 & Ciclo entre Services & MEDIUM & Dois Services que se chamam mutuamente & 11 \\
 MVC10 & Autoinvocação de método @Transactional & HIGH & Método que chama, na própria classe, outro método @Transactional; a transação não é aplicada porque a chamada não passa pelo proxy do Spring & 217 \\
-MVC11 & @Transactional em método privado & HIGH & Método privado anotado com @Transactional, anotação que o Spring ignora nesse caso & 14 \\
+\rowcolor{cLavanda!35}MVC11 & @Transactional em método privado & HIGH & Método privado anotado com @Transactional, anotação que o Spring ignora nesse caso & 14 \\
 MVC12* & Escrita sem @Transactional & MEDIUM & Método de Service com nome de escrita (save, update, delete, create, salvar, remover etc.) sem @Transactional & 10.615 \\
-MVC13* & Leitura sem @Transactional & LOW & Método de Service com nome de leitura (find, get, list, buscar, listar etc.) sem @Transactional(readOnly = true) & 21.559 \\
+\rowcolor{cLavanda!35}MVC13* & Leitura sem @Transactional & LOW & Método de Service com nome de leitura (find, get, list, buscar, listar etc.) sem @Transactional(readOnly = true) & 21.559 \\
 MVC14 & Injeção por campo & LOW & Campo injetado com @Autowired em vez de injeção pelo construtor & 53.187 \\
-MVC15 & Tratamento genérico de exceções & MEDIUM & Método com @ExceptionHandler; aproximação, pois o tipo de exceção tratado não é verificado & 3.001 \\
+\rowcolor{cLavanda!35}MVC15 & Tratamento genérico de exceções & MEDIUM & Método com @ExceptionHandler; aproximação, pois o tipo de exceção tratado não é verificado & 3.001 \\
 MVC17 & Controller com fan-out excessivo & MEDIUM & Método de Controller que chama mais de 15 métodos distintos, sinal de lógica de negócio no Controller & 999 \\
-MVC18* & Repository com nome de regra de negócio & LOW & Método de Repository cujo nome sugere lógica de negócio (cálculo, validação, aprovação, desconto etc.) & 134 \\
+\rowcolor{cLavanda!35}MVC18* & Repository com nome de regra de negócio & LOW & Método de Repository cujo nome sugere lógica de negócio (cálculo, validação, aprovação, desconto etc.) & 134 \\
 SG\_01 & Candidato a Singleton & INFO & Classe com construtor privado, campo estático do próprio tipo e método \texttt{getInstance} & 150 \\
-SG\_02 & Singleton com inicialização antecipada & INFO & Classe com campo estático e final do próprio tipo, já instanciado na declaração & 2.095 \\
+\rowcolor{cLavanda!35}SG\_02 & Singleton com inicialização antecipada & INFO & Classe com campo estático e final do próprio tipo, já instanciado na declaração & 2.095 \\
 SG\_03 & Singleton com getter sincronizado & MEDIUM & Método \texttt{getInstance} declarado \texttt{synchronized}, o que pode gerar gargalo de desempenho & 31 \\
-SG\_04 & Singleton com double-checked locking & INFO & Campo \texttt{volatile} do próprio tipo e \texttt{getInstance} com verificação dupla e bloco \texttt{synchronized} & 8 \\
+\rowcolor{cLavanda!35}SG\_04 & Singleton com double-checked locking & INFO & Campo \texttt{volatile} do próprio tipo e \texttt{getInstance} com verificação dupla e bloco \texttt{synchronized} & 8 \\
 SG\_05 & Singleton com Holder & INFO & Classe interna ``Holder'' que guarda a instância única da classe externa & 43 \\
-SG\_06 & Singleton por enum & INFO & Todo tipo \texttt{enum} do projeto & 7.046 \\
+\rowcolor{cLavanda!35}SG\_06 & Singleton por enum & INFO & Todo tipo \texttt{enum} do projeto & 7.046 \\
 SG\_07 & Singleton vulnerável à desserialização & HIGH & Classe serializável com construtor privado e sem \texttt{readResolve()}; a desserialização pode criar uma segunda instância & 210 \\
-SG\_08 & Singleton protegido contra desserialização & LOW & Classe que implementa \texttt{readResolve()} & 56 \\
+\rowcolor{cLavanda!35}SG\_08 & Singleton protegido contra desserialização & LOW & Classe que implementa \texttt{readResolve()} & 56 \\
 SG\_09 & Singleton vulnerável à clonagem & HIGH & Classe \texttt{Cloneable} com construtor privado cujo \texttt{clone()} não impede cópias & 13 \\
-SG\_10 & Singleton protegido contra clonagem & LOW & Classe cujo \texttt{clone()} lança \texttt{CloneNotSupportedException} & 27 \\
+\rowcolor{cLavanda!35}SG\_10 & Singleton protegido contra clonagem & LOW & Classe cujo \texttt{clone()} lança \texttt{CloneNotSupportedException} & 27 \\
 SG\_11 & Singleton sem proteção contra reflexão & MEDIUM & Classe com construtor privado que não verifica se já existe uma instância & 15.882 \\
 \midrule\noalign{}
  & \textbf{Total} & & & \textbf{120.951} \\
@@ -240,7 +243,7 @@ SG\_11 & Singleton sem proteção contra reflexão & MEDIUM & Classe com constru
 
 Cada regra recebe uma severidade conforme o impacto da ocorrência sobre o sistema. HIGH indica violações que quebram a separação entre camadas ou fazem o framework se comportar de forma diferente da esperada. MEDIUM indica problemas que degradam a manutenção ou o desempenho sem causar falha imediata. LOW indica desvios de boas práticas recomendadas pelo framework, como a injeção de dependência por campo. INFO apenas registra a presença de um padrão, sem apontar um problema. No índice de risco, essas severidades recebem os pesos 3, 2, 1 e 0,5, respectivamente. As regras foram escolhidas por três motivos: o padrão MVC estrutura praticamente todos os projetos Spring, nas camadas Controller, Service e Repository; o Singleton é um padrão de criação frequentemente implementado de forma manual, o que conflita com o Spring, que já gerencia seus componentes como instâncias únicas; e ambos podem ser verificados no grafo, a partir de anotações, dependências e chamadas entre classes, sem executar nem compilar o projeto.
 
-Em concordância com as regras arquiteturais, também para cada pacote, consultas em Cypher calculam: o acoplamento aferente ($C_a$, ou fan-in, classes de outros pacotes que dependem dele); o acoplamento eferente ($C_e$, ou fan-out, soma das dependências de suas classes para classes de outros pacotes); as dependências cruzadas (número de pacotes distintos dos quais depende); as classes que participam de ciclos de dependência de até cinco classes; a instabilidade (Martin, 2003), dada por
+Em concordância com as regras arquiteturais, também para cada pacote, consultas em Cypher calculam: o acoplamento aferente ($C_a$, ou fan-in, que são classes de outros pacotes que dependem dele); o acoplamento eferente ($C_e$, ou fan-out, é a soma das dependências de suas classes para classes de outros pacotes); as dependências cruzadas (número de pacotes distintos dos quais depende); as classes que participam de ciclos de dependência de até cinco classes; a instabilidade (Martin, 2003), dada por
 \begin{equation}
   I = \frac{C_e}{C_a + C_e};
   \label{eq:instabilidade}
