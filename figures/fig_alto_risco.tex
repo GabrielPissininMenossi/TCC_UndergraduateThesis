@@ -7,19 +7,19 @@
   xmin=0, xmax=100, ymin=-0.6, ymax=0.6, ytick=\empty,
   xtick={0,20,40,60,80,100}, xlabel={Pacotes de alto risco do corpus (21.739 = 100\,\%)},
   axis y line=none, axis x line*=bottom,
-  point meta=explicit symbolic, nodes near coords, every node near coord/.append style={font=\scriptsize, white},
+  point meta=explicit symbolic, nodes near coords, every node near coord/.append style={font=\scriptsize},
   legend style={at={(0.5,-0.55)}, anchor=north, font=\scriptsize, draw=none, legend columns=1, cells={anchor=west}},
   area legend,
 ]
-\addplot[fill=cazul, draw=white, line width=1pt] coordinates {(56.332,0) [56,3\,\%]};
+\addplot[fill=cAnil, draw=cAnil, line width=0.4pt, every node near coord/.append style={white}] coordinates {(56.332,0) [56,3\,\%]};
 \addlegendentry{Com violação (12.246; 56,3\,\%)}
-\addplot[fill=cverde, draw=white, line width=1pt] coordinates {(37.555,0) [37,6\,\%]};
+\addplot[fill=cCeu, draw=cAnil, line width=0.4pt, every node near coord/.append style={black}] coordinates {(37.555,0) [37,6\,\%]};
 \addlegendentry{Sem violação: 3 ou mais dependências cruzadas (8.164; 37,6\,\%)}
-\addplot[fill=claranja, draw=white, line width=1pt] coordinates {(2.594,0) []};
+\addplot[fill=cCiano, draw=cAnil, line width=0.4pt, every node near coord/.append style={black}] coordinates {(2.594,0) []};
 \addlegendentry{Sem violação: ciclo e 3 ou mais dependências cruzadas (564; 2,6\,\%)}
-\addplot[fill=camarelo, draw=white, line width=1pt] coordinates {(1.095,0) []};
+\addplot[fill=cLima, draw=cAnil, line width=0.4pt, every node near coord/.append style={black}] coordinates {(1.095,0) []};
 \addlegendentry{Sem violação: só ciclo (238; 1,1\,\%)}
-\addplot[fill=ccinza, draw=white, line width=1pt] coordinates {(2.424,0) []};
+\addplot[fill=cLavanda, draw=cAnil, line width=0.4pt, every node near coord/.append style={black}] coordinates {(2.424,0) []};
 \addlegendentry{Sem violação: outro motivo (fan-out, 1 ou 2 dependências) (527; 2,4\,\%)}
 \end{axis}
 \end{tikzpicture}

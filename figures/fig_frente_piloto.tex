@@ -10,10 +10,10 @@
   legend style={at={(0.5,-0.3)}, anchor=north, font=\scriptsize, draw=none, legend columns=2,
                 /tikz/every even column/.append style={column sep=8pt}},
 ]
-\addplot[cazul!60, thick, const plot mark left, forget plot] coordinates {(0.00,0.00) (4.11,3.63) (12.88,21.71) (16.24,24.92) (17.00,25.34) (20.35,28.55) (29.12,46.62) (33.23,50.25) (51.29,57.09) (53.43,60.60) (55.40,60.72) (57.54,64.23) (67.53,82.00) (71.64,85.63) (91.83,95.98) (95.95,99.60)};
-\addplot[only marks, mark=*, mark size=1.8pt, cazul, draw=white] coordinates {(0.00,0.00) (4.11,3.63) (12.88,21.71) (16.24,24.92) (17.00,25.34) (20.35,28.55) (29.12,46.62) (33.23,50.25) (51.29,57.09) (53.43,60.60) (55.40,60.72) (57.54,64.23) (67.53,82.00) (71.64,85.63) (91.83,95.98) (95.95,99.60)};
+\addplot[cCeu, thick, const plot mark left, forget plot] coordinates {(0.00,0.00) (4.11,3.63) (12.88,21.71) (16.24,24.92) (17.00,25.34) (20.35,28.55) (29.12,46.62) (33.23,50.25) (51.29,57.09) (53.43,60.60) (55.40,60.72) (57.54,64.23) (67.53,82.00) (71.64,85.63) (91.83,95.98) (95.95,99.60)};
+\addplot[only marks, mark=*, mark size=1.8pt, fill=cAnil, draw=white] coordinates {(0.00,0.00) (4.11,3.63) (12.88,21.71) (16.24,24.92) (17.00,25.34) (20.35,28.55) (29.12,46.62) (33.23,50.25) (51.29,57.09) (53.43,60.60) (55.40,60.72) (57.54,64.23) (67.53,82.00) (71.64,85.63) (91.83,95.98) (95.95,99.60)};
 \addlegendentry{Frente do NSGA-II (16 planos, igual à exata)}
-\addplot[only marks, mark=*, mark size=3pt, claranja, draw=white] coordinates {(29.12,46.62)};
+\addplot[only marks, mark=*, mark size=3.2pt, fill=cLima, draw=cAnil, line width=0.8pt] coordinates {(29.12,46.62)};
 \addlegendentry{Plano recomendado (joelho)}
 \node[font=\scriptsize, anchor=west, align=left] (rot) at (axis cs:45,22)
   {entities + view:\\29\,\% do esforço $\rightarrow$ 47\,\% do benefício};

@@ -1,21 +1,32 @@
 % Fluxo da abordagem: um projeto individual, da entrada à recomendação de refatoração.
 % O índice de risco não aparece aqui: ele só existe no treinamento (é o rótulo); na análise de um
 % projeto, o modelo já treinado prevê o risco diretamente a partir das métricas.
-% Cores: serviço responsável por cada etapa (verde = Go, azul = Java + Neo4j, laranja = Python).
-\begin{tikzpicture}[node distance=0.16cm]
-  \node[etapa=cverde, text width=1.92cm, inner sep=2pt] (a1) {\textbf{Projeto}\\[2pt]sistema Java Spring fora do corpus};
-  \node[etapa=cazul, text width=1.92cm, inner sep=2pt, right=of a1] (a2) {\textbf{Análise do código}\\[2pt]JavaParser e Symbol Solver};
-  \node[etapa=cazul, text width=1.92cm, inner sep=2pt, right=of a2] (a3) {\textbf{Grafo semântico}\\[2pt]nós e arestas no Neo4j};
-  \node[etapa=cazul, text width=1.92cm, inner sep=2pt, right=of a3] (a4) {\textbf{Regras e métricas}\\[2pt]violações e métricas por pacote};
-  \node[etapa=claranja, text width=1.92cm, inner sep=2pt, right=of a4] (a5) {\textbf{Previsão do risco}\\[2pt]probabilidade de alto risco por pacote};
-  \node[etapa=claranja, text width=1.92cm, inner sep=2pt, right=of a5] (a6) {\textbf{Otimização}\\[2pt]NSGA-II: frente esforço $\times$ benefício};
-  \node[etapa=cverde, text width=2.05cm, inner sep=2pt, right=of a6] (a7) {\textbf{Recomendação}\\[2pt]plano de refatoração e explicação do risco};
+% Preenchimento = quem executa a etapa: lavanda = Go, ciano = Java + Neo4j, lima = Python.
+% A barra lavanda é o sistema web em Go, que recebe o projeto, chama os serviços e mostra o resultado.
+\begin{tikzpicture}[node distance=0.2cm]
+  % etapas
+  \node[etapa=cLavanda, text width=1.55cm] (a1) {\textbf{Projeto}\\[2pt]sistema Java Spring fora do corpus};
+  \node[etapa=cCiano, text width=1.85cm, right=of a1] (a2) {\textbf{Análise do código}\\[2pt]JavaParser e Symbol Solver};
+  \node[etapa=cCiano, text width=1.75cm, right=of a2] (a3) {\textbf{Grafo semântico}\\[2pt]nós e arestas no Neo4j};
+  \node[etapa=cCiano, text width=1.85cm, right=of a3] (a4) {\textbf{Regras e métricas}\\[2pt]violações e métricas por pacote};
+  \node[etapa=cLima, text width=1.85cm, right=of a4] (a5) {\textbf{Previsão do risco}\\[2pt]probabilidade de alto risco por pacote};
+  \node[etapa=cLima, text width=1.85cm, right=of a5] (a6) {\textbf{Otimização}\\[2pt]NSGA-II: frente esforço $\times$ benefício};
+  \node[etapa=cLavanda, text width=2.2cm, right=of a6] (a7) {\textbf{Recomendação}\\[2pt]plano de refatoração e explicação do risco};
   \foreach \a/\b in {a1/a2, a2/a3, a3/a4, a4/a5, a5/a6, a6/a7} \draw[seta] (\a) -- (\b);
-  \node[draw=claranja, dashed, line width=0.8pt, rounded corners=3pt, text width=3.4cm, align=center,
-        font=\scriptsize, inner sep=3pt, above=0.45cm of a5] (m) {Modelo treinado no fluxo do trabalho (Figura~\ref{fig:fluxo-trabalho})};
+  \foreach \n [count=\i] in {a1, a2, a3, a4, a5, a6, a7}
+    \node[numero] at ($(\n.north west)+(1pt,1pt)$) {\i};
+  % modelo treinado no fluxo do trabalho
+  \node[draw=cCeu, dashed, line width=0.8pt, rounded corners=3pt, fill=white, text width=3.4cm, align=center,
+        font=\scriptsize, inner sep=3pt, above=0.5cm of a5] (m) {Modelo treinado no fluxo do trabalho (Figura~\ref{fig:fluxo-trabalho})};
   \draw[seta] (m) -- (a5);
-  \node[below=0.35cm of a4.south, anchor=north, font=\scriptsize] {%
-    \tikz\fill[cverde] (0,0) rectangle (0.22,0.22); Go\quad
-    \tikz\fill[cazul] (0,0) rectangle (0.22,0.22); Java + Neo4j\quad
-    \tikz\fill[claranja] (0,0) rectangle (0.22,0.22); Python};
+  % sistema web em Go: recebe o projeto, chama os serviços e apresenta o resultado
+  \node[orquestrador, fit={($(a1.south west)+(0,-0.75)$) ($(a7.south east)+(0,-1.55)$)}] (go) {};
+  \node[font=\scriptsize, align=center] at (go.center)
+    {\textbf{Sistema web em Go}\\[1pt]recebe o projeto, chama os serviços Java e Python na ordem certa e apresenta a recomendação};
+  \foreach \n in {a1, a2, a3, a4, a5, a6, a7} \draw[conexao] (\n.south) -- (\n.south |- go.north);
+  % legenda
+  \node[below=0.3cm of go, font=\scriptsize] {%
+    \tikz\draw[cAnil, fill=cLavanda] (0,0) rectangle (0.24,0.24); Go\qquad
+    \tikz\draw[cAnil, fill=cCiano] (0,0) rectangle (0.24,0.24); Java + Neo4j\qquad
+    \tikz\draw[cAnil, fill=cLima] (0,0) rectangle (0.24,0.24); Python};
 \end{tikzpicture}
